@@ -1,6 +1,9 @@
 [package]
 name = "dtren"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
+# nothing yet
+chrono = { version = "0.4", features = ["clock"] }
+shellexpand = "2.1"
