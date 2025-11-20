@@ -1,4 +1,4 @@
-use chrono::prelude::*;
+use chrono::{DateTime, Local};
 use shellexpand;
 use std::env;
 use std::ffi::OsStr;
