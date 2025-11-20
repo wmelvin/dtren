@@ -7,7 +7,10 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::process;
 
+const VERSION: &str = "0.1.0";
+
 fn usage() {
+    eprintln!("dtren v{}\n", VERSION);
     eprintln!("Usage: dtren <file>\n\nRename a file by appending its modified timestamp to the name.");
 }
 
