@@ -7,7 +7,7 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::process;
 
-const VERSION: &str = "0.1.0";
+const VERSION: &str = "0.1.1";
 
 fn usage() {
     eprintln!("dtren v{}\n", VERSION);
