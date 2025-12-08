@@ -7,7 +7,7 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::process;
 
-const VERSION: &str = "0.1.1";
+const VERSION: &str = "0.1.2";
 
 fn usage() {
     eprintln!("dtren v{}\n", VERSION);
@@ -76,14 +76,28 @@ fn main() {
     let date_time_str = datetime.format("%Y%m%d_%H%M%S").to_string();
 
     // Build new file name: stem + '-' + {date_time} + optional .extension
-    let stem = abs_path
-        .file_stem()
+    let file_name = abs_path
+        .file_name()
         .and_then(OsStr::to_str)
         .unwrap_or_else(|| error_exit(format!("invalid file name: {}", abs_path.display()), 2));
 
-    let new_name = match abs_path.extension().and_then(OsStr::to_str) {
-        Some(ext) if !ext.is_empty() => format!("{}-{}.{}", stem, date_time_str, ext),
-        _ => format!("{}-{}", stem, date_time_str),
+    // Check for two-part tar extensions (.tar.*)
+    let new_name = if let Some(tar_pos) = file_name.rfind(".tar.") {
+        // Found .tar. followed by another extension
+        let stem = &file_name[..tar_pos];
+        let tar_ext = &file_name[tar_pos..]; // Everything from .tar onwards
+        format!("{}-{}{}", stem, date_time_str, tar_ext)
+    } else {
+        // Standard handling for single extensions
+        let stem = abs_path
+            .file_stem()
+            .and_then(OsStr::to_str)
+            .unwrap_or_else(|| error_exit(format!("invalid file name: {}", abs_path.display()), 2));
+
+        match abs_path.extension().and_then(OsStr::to_str) {
+            Some(ext) if !ext.is_empty() => format!("{}-{}.{}", stem, date_time_str, ext),
+            _ => format!("{}-{}", stem, date_time_str),
+        }
     };
 
     let parent = abs_path.parent().unwrap_or(Path::new("."));
